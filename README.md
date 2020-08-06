@@ -1,4 +1,4 @@
-# vue-reader
+# Vue-Ebook
 
 ## Project setup
 ```
