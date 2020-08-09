@@ -6,6 +6,7 @@ export default {
     isFamilyPopShow: false,
     currentFont: 14,
     currentFamily:'Default',
+    currentTheme: 'Default',
     currentBook: null
   },
   mutations:{
@@ -29,6 +30,9 @@ export default {
     },
     _setFamilyPop(state,isFamilyPopShow){
       state.isFamilyPopShow = isFamilyPopShow
+    },
+    _setCurrentTheme(state,currentTheme){
+      state.currentTheme = currentTheme
     }
   },
   actions:{

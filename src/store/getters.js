@@ -5,5 +5,6 @@ export default {
   currentFont: state => state.book.currentFont,
   currentFamily: state => state.book.currentFamily,
   currentBook: state => state.book.currentBook,
-  isFamilyPopShow: state => state.book.isFamilyPopShow
+  isFamilyPopShow: state => state.book.isFamilyPopShow,
+  currentTheme: state => state.book.currentTheme
 }

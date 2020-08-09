@@ -1,5 +1,5 @@
 <template>
-  <div>进度</div>
+  <div>{{}}</div>
 </template>
 
 <script>

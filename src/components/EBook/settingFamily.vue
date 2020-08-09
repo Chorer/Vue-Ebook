@@ -6,12 +6,12 @@
           <span class="icon-down2"></span>
         </div>
         <div class="pop-title-text">
-          <span>选择字体</span>
+          <span>{{$t("book.selectFont")}}</span>
         </div>
       </div>
       <div class="pop-list">
         <div class="pop-list-item" 
-          v-for="item in fontList" 
+          v-for="item in fontFamilyList" 
           :key="item.font"
           @click="setFontFamily(item.font)"
           >
@@ -27,18 +27,14 @@
 
 <script>
 import { bookMixin } from 'utils/mixin'
+import { fontFamilyList } from 'utils/book'
+import { saveFontFamily,getFontFamily } from 'utils/localStorage'
 
 export default {
   mixins:[bookMixin],
   data(){
     return {
-      fontList:[
-        { font: 'Default' },
-        { font: 'Cabin' },
-        { font: 'Days One' },
-        { font: 'Montserrat' },
-        { font: 'Tangerine' }
-      ]
+      fontFamilyList
     }
   },
   methods:{
@@ -48,6 +44,7 @@ export default {
     setFontFamily(font){
       // 1.视图渲染
       this.setCurrentFamily(font)
+      saveFontFamily(this.fileName,font)
       // 2.实际修改字体
       if(font == 'Default'){
         font = 'Times New Roman'

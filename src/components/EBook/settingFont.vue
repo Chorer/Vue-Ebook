@@ -39,6 +39,8 @@
 import settingFamily from 'components/EBook/settingFamily'
 
 import { bookMixin } from 'utils/mixin'
+import { fontList } from 'utils/book'
+import { getFontSize,saveFontSize } from 'utils/localStorage'
 
 export default {
   mixins:[bookMixin],
@@ -47,15 +49,7 @@ export default {
   },
   data(){
     return {
-      fontList:[
-        {fontSize: 12},
-        {fontSize: 14},
-        {fontSize: 16},
-        {fontSize: 18},
-        {fontSize: 20},
-        {fontSize: 22},
-        {fontSize: 24}
-      ]
+      fontList
     }
   },
   computed:{
@@ -70,6 +64,7 @@ export default {
     changeFont(fontSize){
       // 改变状态，渲染视图
       this.setCurrentFont(fontSize)
+      saveFontSize(this.fileName,fontSize)
       // 设置实际字号
       this.currentBook.rendition.themes.fontSize(fontSize)
     },

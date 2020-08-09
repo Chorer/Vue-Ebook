@@ -12,6 +12,14 @@ import menuBar from 'components/EBook/menuBar'
 
 import { bookMixin } from 'utils/mixin'
 import fontFile from 'utils/font'
+import {
+  getFontSize,
+  saveFontSize,
+  getFontFamily,
+  saveFontFamily,
+  saveTheme,
+  getTheme
+} from 'utils/localStorage'
 
 import Epub from 'epubjs'
 global.epub = Epub
@@ -46,7 +54,51 @@ export default {
         height:window.innerHeight,
         method:'default'
       })
-      this.rendition.display()
+      this.rendition.display().then(() => {
+        this.initTheme()
+        this.initGlobalTheme()
+        this.initFontSize()
+        this.initFontFamily()
+      })
+    },
+    initTheme(){
+      // 写入本地存储
+      let theme = getTheme(this.fileName)
+      if(!theme){
+        theme = this._themeList[0].name
+        saveTheme(this.fileName,theme)
+      }
+      // 注册主题
+      const themesObject = this.currentBook.rendition.themes
+      this._themeList.forEach(theme => {
+        themesObject.register(theme.name,theme.style)
+      })
+      // 应用阅读器主题样式
+      this.setCurrentTheme(theme)
+      themesObject.select(theme)
+      // 应用全局主题样式
+
+    },
+    initGlobalTheme(){
+      this.injectCssByTheme(this.currentTheme)
+    },
+    initFontSize(){
+      let fontSize = getFontSize(this.fileName)
+      if(!fontSize){
+        saveFontSize(this.fileName,this.currentFont)
+      } else {
+        this.currentBook.rendition.themes.fontSize(fontSize)
+        this.setCurrentFont(fontSize)
+      }
+    },
+    initFontFamily(){
+      let fontFamily = getFontFamily(this.fileName)
+      if(!fontFamily){
+        saveFontFamily(this.fileName,this.currentFamily)
+      } else {
+        this.currentBook.rendition.themes.font(fontFamily)
+        this.setCurrentFamily(fontFamily)
+      }
     },
     bindTouch(){
       // 绑定滑动翻页事件

@@ -19,5 +19,8 @@ export default {
   },
   setFamilyPop({ commit,state },isFamilyPopShow){
     return commit('_setFamilyPop',isFamilyPopShow)
+  },
+  setCurrentTheme({ commit,state },currentTheme){
+    return commit('_setCurrentTheme',currentTheme)
   }
 }

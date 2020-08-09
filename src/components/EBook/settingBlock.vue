@@ -36,6 +36,6 @@ export default {
     transform: translate(0,0);
   }
   .slide-up-enter-active,.slide-up-leave-active {
-    transition: all .3s linear;
+    transition: all .2s linear;
   }
 </style>
