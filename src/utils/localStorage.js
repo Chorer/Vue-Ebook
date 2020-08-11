@@ -61,3 +61,10 @@ export function saveLocale(locale){
 export function getLocale(){
   return getLocalStorage(locale)
 }
+// 进度
+export function saveProgress(fileName,progress){
+  return setBookObject(fileName,'progress',progress)
+}
+export function getProgress(fileName){
+  return getBookObject(fileName,'progress')
+}

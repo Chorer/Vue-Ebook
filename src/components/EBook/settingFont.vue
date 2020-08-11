@@ -28,7 +28,7 @@
         <span>{{currentFamily}}</span>
       </div>
       <div class="famliy-icon">
-        <span class="icon-forward"></span>
+        <span class="icon-forward iconfont"></span>
       </div>
     </div>
     <setting-family v-show="isFamilyPopShow"></setting-family>

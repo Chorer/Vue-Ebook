@@ -3,7 +3,7 @@
     <div class="setting-font-family-pop">
       <div class="pop-title">
         <div class="pop-title-icon" @click="hidePop">
-          <span class="icon-down2"></span>
+          <span class="icon-down2 iconfont"></span>
         </div>
         <div class="pop-title-text">
           <span>{{$t("book.selectFont")}}</span>
@@ -17,7 +17,7 @@
           >
           <div class="list-item-text" :class="{'selected':item.font == currentFamily}">{{item.font}}</div>
           <div class="list-item-icon" v-show="item.font == currentFamily">
-            <span class="icon-check"></span>
+            <span class="icon-check iconfont"></span>
           </div>
         </div>
       </div>

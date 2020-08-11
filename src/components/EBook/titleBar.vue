@@ -2,17 +2,17 @@
   <transition name="slide-down">
     <div class="title-bar" v-show="isBarShow">
         <div class="left">
-          <span class="icon-back"></span>
+          <span class="icon-back iconfont"></span>
         </div>
         <div class="right">
           <div class="icon-wrapper">
-            <span class="icon-shelf"></span>
+            <span class="icon-shelf iconfont"></span>
           </div>
           <div class="icon-wrapper">
-            <span class="icon-cart"></span>
+            <span class="icon-cart iconfont"></span>
           </div>
           <div class="icon-wrapper">
-            <span class="icon-more"></span>
+            <span class="icon-more iconfont"></span>
           </div>
         </div>
     </div>        
@@ -32,18 +32,20 @@ export default {
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 100;
+    z-index: 400;
     display: flex;
     width: 100%;
     height: rem(60);
     background-color: #fff;
     box-shadow: 0 rem(8) rem(8) rgba(0,0,0,.15);
-    font-size: rem(22);
     .left {
       flex: 0 0 rem(60);
       display: flex;
       justify-content: center;
       align-items: center;
+      .icon-back {
+        font-size: rem(26);
+      }
     }
     .right {
       flex:1;
@@ -52,6 +54,9 @@ export default {
       align-items: center;
       .icon-wrapper {
         padding: rem(12);
+        .iconfont {
+          font-size: rem(24);
+        }
       }
     }
   }

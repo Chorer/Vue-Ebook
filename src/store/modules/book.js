@@ -7,7 +7,11 @@ export default {
     currentFont: 14,
     currentFamily:'Default',
     currentTheme: 'Default',
-    currentBook: null
+    currentBook: null,
+    isBookLoaded: false,     // 记录书本是否加载完毕的状态
+    progress: 0,             // 书本阅读进度
+    locations: null,            // 用于操作书籍页面跳转的对象
+    isLoadingShow: false
   },
   mutations:{
     _setFileName(state,fileName){
@@ -33,6 +37,18 @@ export default {
     },
     _setCurrentTheme(state,currentTheme){
       state.currentTheme = currentTheme
+    },
+    _setBookLoaded(state,isBookLoaded){
+      state.isBookLoaded = isBookLoaded
+    },
+    _setBookProgress(state,progress){
+      state.progress = progress
+    },
+    _setLocations(state,locations){
+      state.locations = locations
+    },
+    _setLoading(state,isLoadingShow){
+      state.isLoadingShow = isLoadingShow
     }
   },
   actions:{

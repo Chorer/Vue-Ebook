@@ -2,6 +2,8 @@
   <div>
     <title-bar></title-bar>
     <div id="read"></div>
+    <!--加载弹窗-->
+    <loading-modal></loading-modal>
     <menu-bar></menu-bar>
   </div>
 </template>
@@ -9,6 +11,7 @@
 <script>
 import titleBar from 'components/EBook/titleBar'
 import menuBar from 'components/EBook/menuBar'
+import loadingModal from 'components/EBook/loadingModal'
 
 import { bookMixin } from 'utils/mixin'
 import fontFile from 'utils/font'
@@ -18,8 +21,11 @@ import {
   getFontFamily,
   saveFontFamily,
   saveTheme,
-  getTheme
+  getTheme,
+  saveProgress,
+  getProgress
 } from 'utils/localStorage'
+import baseUrl from '@/config'
 
 import Epub from 'epubjs'
 global.epub = Epub
@@ -28,14 +34,15 @@ export default {
   mixins:[bookMixin],
   components:{
     titleBar,
-    menuBar
+    menuBar,
+    loadingModal
   },
   mounted(){
     // 获取当前书籍对应参数
     const fileName = this.$route.params.fileName.replace('|','/')
     // 将当前书籍异步写入全局状态
     this.setFileName(fileName).then(() => {
-      // 1.渲染书籍
+      // 1.渲染书籍，初始化各种配置
       this.initBook()
       // 2.绑定事件
       this.bindTouch()
@@ -45,20 +52,37 @@ export default {
   },
   methods:{
     initBook(){
-      // 初始化渲染书籍
-      const baseUrl = 'http://localhost:8081/epub/'
-      const book = new Epub(`${baseUrl}${this.fileName}.epub`)
+      // 渲染书籍
+      const _baseUrl = `${baseUrl}/epub/`
+      const book = new Epub(`${_baseUrl}${this.fileName}.epub`)
       this.setCurrentBook(book)
       this.rendition = book.renderTo('read',{
         width:window.innerWidth,
         height:window.innerHeight,
         method:'default'
       })
+      // 生成location对象
+      book.ready.then(() => {
+        this.generateLocation()
+      })
+      // 渲染配置
       this.rendition.display().then(() => {
+        console.log('视图渲染')
         this.initTheme()
         this.initGlobalTheme()
         this.initFontSize()
         this.initFontFamily()
+      })
+    },
+    generateLocation(){
+      // 单页字数
+      const totalWords = 750 * (window.innerWidth / 375) * (getFontSize(this.fileName) / 16)
+      // 生成 locations 对象并保存
+      this.currentBook.locations.generate(totalWords).then(res => {
+        // 注意这里的res只是分页后的数组结果，而不是locations对象
+        this.setLocations(this.currentBook.locations)
+        this.setBookLoaded(true)
+        this.initProgress()
       })
     },
     initTheme(){
@@ -100,6 +124,15 @@ export default {
         this.setCurrentFamily(fontFamily)
       }
     },
+    initProgress(){
+      const currentProgress = getProgress(this.fileName)
+      if(!currentProgress){
+        saveProgress(this.fileName,this.progress)
+      } else {
+        this.setBookProgress(currentProgress)
+        this.jumpToPage(currentProgress)
+      }
+    }, 
     bindTouch(){
       // 绑定滑动翻页事件
       let startX,startTime
@@ -143,8 +176,6 @@ export default {
       this.setFamilyPop(false)
     },
     injectFont(){
-      const baseUrl = process.env.NODE_ENV === 'development'?
-        process.env.VUE_APP_DEV : process.env.VUE_APP_PRO
       this.currentBook.rendition.hooks.content.register(contents => {
         fontFile.forEach(item => {
           contents.addStylesheet(`${baseUrl}/fonts/${item}`)

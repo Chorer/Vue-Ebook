@@ -6,5 +6,9 @@ export default {
   currentFamily: state => state.book.currentFamily,
   currentBook: state => state.book.currentBook,
   isFamilyPopShow: state => state.book.isFamilyPopShow,
-  currentTheme: state => state.book.currentTheme
+  currentTheme: state => state.book.currentTheme,
+  isBookLoaded: state => state.book.isBookLoaded,
+  progress: state => state.book.progress,
+  locations: state => state.book.locations,
+  isLoadingShow: state => state.book.isLoadingShow
 }

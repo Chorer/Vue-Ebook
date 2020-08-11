@@ -7,16 +7,16 @@
         v-show="isBarShow" 
         @click="toggleSetting" >
         <div class="icon-wrapper">
-          <span class="icon-menu"></span>
+          <span class="icon-menu iconfont"></span>
         </div>
         <div class="icon-wrapper">
-         <span class="icon-progress"></span>
+         <span class="icon-progress iconfont"></span>
         </div>
         <div class="icon-wrapper">
-         <span class="icon-bright"></span>
+         <span class="icon-bright iconfont"></span>
         </div>
         <div class="icon-wrapper">
-         <span class="icon-A"></span>
+         <span class="icon-A iconfont"></span>
        </div>
       </div>
     </transition>  
@@ -35,7 +35,7 @@ export default {
   },
   methods:{
     toggleSetting(event){
-      switch(event.target.className){
+      switch(event.target.classList[0]){
         case 'icon-menu': this.setSetting(0); break
         case 'icon-progress': this.setSetting(1); break
         case 'icon-bright': this.setSetting(2); break
@@ -49,7 +49,7 @@ export default {
 
 <style scoped lang="scss">
   .menu-bar.hide-bar-shadow {
-    box-shadow: none;
+    box-shadow: none!important;
   }
   .menu-bar {
     position: absolute;
@@ -61,12 +61,15 @@ export default {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    font-size: rem(24);
     background-color: #fff;
     box-shadow: 0 rem(-8) rem(8) rgba(0,0,0,.15);
     .icon-wrapper{
-      span {
-        padding:rem(10)
+      .iconfont {
+        padding:rem(10);
+        font-size: rem(24);
+      }
+      .icon-progress {
+        font-size: rem(28);
       }
     }
   }

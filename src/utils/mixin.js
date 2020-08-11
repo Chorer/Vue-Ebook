@@ -1,5 +1,6 @@
 import { mapGetters,mapActions } from 'vuex'
 import { themeList,injectCss,removeAllCss } from 'utils/book'
+import { saveProgress } from 'utils/localStorage'
 
 export const bookMixin = {
   computed:{
@@ -13,6 +14,10 @@ export const bookMixin = {
         'currentTheme',
         'currentBook',
         'isFamilyPopShow',
+        'isBookLoaded',
+        'progress',
+        'locations',
+        'isLoadingShow'
       ]),
     _themeList(){
       return themeList(this)
@@ -28,7 +33,11 @@ export const bookMixin = {
         'setCurrentBook',
         'setCurrentFamily',
         'setCurrentTheme',
-        'setFamilyPop'
+        'setFamilyPop',
+        'setBookLoaded',
+        'setBookProgress',
+        'setLocations',
+        'setLoading'
       ]),
     injectCssByTheme(name){
       removeAllCss()
@@ -50,6 +59,18 @@ export const bookMixin = {
         default:
           injectCss(`${baseUrl}/themes/theme_default.css`)
       }
-    }  
+    },
+    jumpToPage(currentProgress) {
+      saveProgress(this.fileName,currentProgress)
+      const ratio = currentProgress / 100
+      let toLocation = 0
+      if(this.locations){
+        toLocation = this.locations.cfiFromPercentage(ratio) 
+      }
+      this.setLoading(true)
+      this.currentBook.rendition.display(toLocation).then(() => {
+        this.setLoading(false)
+      })      
+    }
   }
 }

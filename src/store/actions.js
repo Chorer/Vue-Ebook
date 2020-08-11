@@ -22,5 +22,17 @@ export default {
   },
   setCurrentTheme({ commit,state },currentTheme){
     return commit('_setCurrentTheme',currentTheme)
+  },
+  setBookLoaded({ commit,state },isBookLoaded){
+    return commit('_setBookLoaded',isBookLoaded)
+  },
+  setBookProgress({ commit,state },progress){
+    return commit('_setBookProgress',progress)
+  },
+  setLocations({ commit,state },locations){
+    return commit('_setLocations',locations)
+  },
+  setLoading({ commit,state },isLoadingShow){
+    return commit('_setLoading',isLoadingShow)
   }
 }

@@ -56,7 +56,7 @@ export function themeList(vue){
       style: {
         body: {
           'color': '#cecece',
-          'background': '#000000',
+          'background': '#292929',
         }
       }
     }
