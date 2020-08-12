@@ -16,6 +16,8 @@ export const bookMixin = {
         'isFamilyPopShow',
         'isBookLoaded',
         'progress',
+        'section',
+        'currentSectionName',
         'locations',
         'isLoadingShow'
       ]),
@@ -36,6 +38,8 @@ export const bookMixin = {
         'setFamilyPop',
         'setBookLoaded',
         'setBookProgress',
+        'setBookSection',
+        'setSectionName',        
         'setLocations',
         'setLoading'
       ]),
@@ -69,8 +73,24 @@ export const bookMixin = {
       }
       this.setLoading(true)
       this.currentBook.rendition.display(toLocation).then(() => {
+        console.log('页面跳转')
+        this.syncSection()
         this.setLoading(false)
       })      
+    },
+    syncSection(){
+      const currentLocation = this.currentBook.rendition.currentLocation()
+      this.setBookSection(currentLocation.start.index)
+      console.log(currentLocation.start.index)
+    },
+    syncSectionName(section){
+      if(this.currentBook && this.currentBook.navigation){
+        const sectionInfo = this.currentBook.section(section)     
+        if(sectionInfo && sectionInfo.href) {
+          const currentSectionName = this.currentBook.navigation.get(sectionInfo.href).label
+          this.setSectionName(currentSectionName)
+        }
+      }         
     }
   }
 }

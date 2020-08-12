@@ -1,11 +1,11 @@
 <template>
   <div class="setting-progress">
-    <div class="icon-wrapper">
+    <div class="icon-wrapper" @click="prevSection">
       <span class="icon-back iconfont"></span>
     </div>
     <div class="progress-wrapper">
       <div class="progress-readtime">
-        <span>读了3分钟</span>
+        <span class="cal-time">读了3分钟</span>
         <span class="icon-forward iconfont"></span>
       </div>
       <div class="progress-slider">
@@ -21,37 +21,94 @@
         >
       </div>
       <div class="progress-ratio">
-        {{isBookLoaded ? progress + '%' : '加载中…'}}
+        <span class="section-name">{{currentSectionName}}</span>
+        <span class="section-percentage">({{isBookLoaded ? progress + '%' : '加载中…'}})</span>
       </div>
     </div>
-    <div class="icon-wrapper">
+    <div class="icon-wrapper" @click="nextSection">
       <span class="icon-forward iconfont"></span>
     </div>
-
   </div>
 </template>
 
 <script>
+ /* eslint-disable */
 import { bookMixin } from 'utils/mixin'
-
+import { saveProgress } from 'utils/localStorage'
+import loadingModal from 'components/EBook/loadingModal'
 
 export default {
   mixins:[bookMixin],
+  computed:{
+    // getSectionName(){
+    //   // 获取对应的章节对象
+    //   console.log('重新计算章节名字')
+    //    if(this.currentBook && this.currentBook.navigation){
+    //       const sectionInfo = this.currentBook.section(this.section)     
+    //       if(sectionInfo && sectionInfo.href) {
+    //         return this.currentBook.navigation.get(sectionInfo.href).label
+    //       }
+    //    }
+    // }
+  },
   methods:{
     // 拖拽时，修改progress状态，触发监听后修改背景颜色
     onDragSlider(event){
       // 这里也可以一边拖拽一边实时渲染，但比较损耗性能，所以结束拖拽后再渲染
       const currentValue = event.target.value
       this.setBookProgress(currentValue)
+      this.$refs.slider.style.backgroundSize = `${event.target.value}% 100%`
     },
     // 结束拖拽时，跳到对应页面
     onUpSlider(event){
+      // 跳到对应页面
       this.jumpToPage(event.target.value)
+      // 同步 section 的值
     },
+    // 上一章节
+    prevSection(){
+      if(this.isBookLoaded && this.section > 0){
+        this.setBookSection(this.section - 1).then(() => {
+          this.jumpToSection()
+        })
+      }
+    },
+    // 下一章节
+    nextSection(){
+      if(this.isBookLoaded && this.section < this.currentBook.spine.length - 1){
+        this.setBookSection(this.section + 1).then(() => {
+          this.jumpToSection()
+        })
+      }
+    },
+    jumpToSection(){
+        this.setLoading(true)
+        // 获取对应的章节对象
+        const sectionInfo = this.currentBook.section(this.section)
+        if(sectionInfo && sectionInfo.href){
+          this.currentBook.rendition.display(sectionInfo.href).then(() => {
+            this.setLoading(false)
+            // 修改进度条
+            const currentLocation = this.currentBook.rendition.currentLocation()
+            const currentPorgress = Math.floor(currentLocation.start.percentage * 100)
+            this.setBookProgress(currentPorgress)
+            // 写入本地存储
+            saveProgress(this.fileName,currentPorgress)
+            // 修改章节标题
+            const currentSectionName = this.currentBook.navigation.get(sectionInfo.href).label
+            this.setSectionName(currentSectionName)
+          })
+        }
+    }
   },
   watch:{
+    // 监听progress改变，同步进度条样式
     progress(newVal,oldVal) {
       this.$refs.slider.style.backgroundSize = `${newVal}% 100%`
+    },
+    // 监听section改变，同步章节标题
+    section(newVal,oldVal) {
+      this.syncSectionName(newVal)    
     }
   }
 }
@@ -85,6 +142,12 @@ export default {
       flex-direction: column;
       align-items: center;
       font-size: rem(14);
+      .progress-readtime {
+        margin-bottom: rem(-8);
+        .cal-time {
+          vertical-align: text-top;
+        }
+      }
       .progress-slider {
         margin: rem(16) 0 rem(22) 0;
         width: 100%;
@@ -94,6 +157,9 @@ export default {
           -webkit-appearance: none;
           width: 100%;
           height: rem(2);
+          &:focus {
+            outline: none;
+          }
           &::-webkit-slider-thumb {
             -webkit-appearance: none;
             width: rem(20);
@@ -103,6 +169,23 @@ export default {
             box-shadow: 0 rem(4) rem(6) 0 rgba(0, 0, 0, .15);
             border: none;
           }
+        }
+      }
+      .progress-ratio {
+        position: absolute;
+        left: 0;
+        bottom: rem(5);
+        padding: 0 rem(15);
+        box-sizing: border-box;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .section-name {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          display: inline-block;
         }
       }
     }

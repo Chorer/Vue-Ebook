@@ -61,7 +61,7 @@ export default {
         height:window.innerHeight,
         method:'default'
       })
-      // 生成location对象
+      // 生成locations对象
       book.ready.then(() => {
         this.generateLocation()
       })
@@ -126,8 +126,10 @@ export default {
     },
     initProgress(){
       const currentProgress = getProgress(this.fileName)
+      // 如果是初次进入
       if(!currentProgress){
         saveProgress(this.fileName,this.progress)
+        this.syncSectionName(this.section)           
       } else {
         this.setBookProgress(currentProgress)
         this.jumpToPage(currentProgress)

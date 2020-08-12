@@ -10,6 +10,8 @@ export default {
     currentBook: null,
     isBookLoaded: false,     // 记录书本是否加载完毕的状态
     progress: 0,             // 书本阅读进度
+    section: 0,              // 书本章节
+    currentSectionName: '',
     locations: null,            // 用于操作书籍页面跳转的对象
     isLoadingShow: false
   },
@@ -44,6 +46,12 @@ export default {
     _setBookProgress(state,progress){
       state.progress = progress
     },
+    _setBookSection(state,section){
+      state.section = section
+    },    
+    _setSectionName(state,currentSectionName){
+      state.currentSectionName = currentSectionName
+    },      
     _setLocations(state,locations){
       state.locations = locations
     },

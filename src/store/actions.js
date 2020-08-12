@@ -29,6 +29,12 @@ export default {
   setBookProgress({ commit,state },progress){
     return commit('_setBookProgress',progress)
   },
+  setBookSection({ commit,state },section){
+    return commit('_setBookSection',section)
+  },  
+  setSectionName({ commit,state }, currentSectionName){
+    return commit('_setSectionName', currentSectionName)
+  },    
   setLocations({ commit,state },locations){
     return commit('_setLocations',locations)
   },

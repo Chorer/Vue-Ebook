@@ -9,6 +9,8 @@ export default {
   currentTheme: state => state.book.currentTheme,
   isBookLoaded: state => state.book.isBookLoaded,
   progress: state => state.book.progress,
+  section: state => state.book.section,  
+  currentSectionName: state => state.book.currentSectionName,
   locations: state => state.book.locations,
   isLoadingShow: state => state.book.isLoadingShow
 }
