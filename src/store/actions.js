@@ -40,5 +40,8 @@ export default {
   },
   setLoading({ commit,state },isLoadingShow){
     return commit('_setLoading',isLoadingShow)
+  },
+  setReadTime({ commit,state },readTime){
+    return commit('_setReadTime',readTime)
   }
 }

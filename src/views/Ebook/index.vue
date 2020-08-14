@@ -23,8 +23,11 @@ import {
   saveTheme,
   getTheme,
   saveProgress,
-  getProgress
+  getProgress,
+  saveTime,
+  getTime
 } from 'utils/localStorage'
+import { secToMin } from 'utils/time'
 import baseUrl from '@/config'
 
 import Epub from 'epubjs'
@@ -50,6 +53,9 @@ export default {
       this.injectFont()
     })    
   },
+  beforeDestroy(){
+    clearInterval(this.timer)
+  },
   methods:{
     initBook(){
       // 渲染书籍
@@ -72,6 +78,7 @@ export default {
         this.initGlobalTheme()
         this.initFontSize()
         this.initFontFamily()
+        this.initTimer()
       })
     },
     generateLocation(){
@@ -84,6 +91,24 @@ export default {
         this.setBookLoaded(true)
         this.initProgress()
       })
+    },
+    initTimer(){
+      let readTime = getTime(this.fileName)
+      // 如果是初次进入，肯定没有将时长写入本地存储
+      if(!readTime){
+        readTime = 0
+      }
+      // 开启计时器
+      this.timer = setInterval(() => {
+        readTime ++
+        if(readTime % 30 == 0) {
+          // 写入本地存储
+          saveTime(this.fileName,readTime)
+          // 设置全局状态
+          const currentMin = secToMin(readTime)
+          this.setReadTime(currentMin)
+        }
+      },1000)
     },
     initTheme(){
       // 写入本地存储
@@ -157,10 +182,12 @@ export default {
     },
     prevPage(){
       this.rendition.prev()
+      this.syncProgress()
       this.hideBar()
     },
     nextPage(){
       this.rendition.next()
+      this.syncProgress()
       this.hideBar()
     },
     toggleBar(){

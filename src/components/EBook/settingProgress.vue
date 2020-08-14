@@ -5,7 +5,7 @@
     </div>
     <div class="progress-wrapper">
       <div class="progress-readtime">
-        <span class="cal-time">读了3分钟</span>
+        <span class="cal-time">{{getReadTime}}</span>
         <span class="icon-forward iconfont"></span>
       </div>
       <div class="progress-slider">
@@ -34,22 +34,19 @@
 <script>
  /* eslint-disable */
 import { bookMixin } from 'utils/mixin'
-import { saveProgress } from 'utils/localStorage'
+import { 
+    saveProgress,
+    saveTime,
+    getTime 
+  } from 'utils/localStorage'
 import loadingModal from 'components/EBook/loadingModal'
 
 export default {
   mixins:[bookMixin],
   computed:{
-    // getSectionName(){
-    //   // 获取对应的章节对象
-    //   console.log('重新计算章节名字')
-    //    if(this.currentBook && this.currentBook.navigation){
-    //       const sectionInfo = this.currentBook.section(this.section)     
-    //       if(sectionInfo && sectionInfo.href) {
-    //         return this.currentBook.navigation.get(sectionInfo.href).label
-    //       }
-    //    }
-    // }
+    getReadTime(){
+      return this.$t('book.haveRead').replace('$1',` ${this.readTime} `)
+    },
   },
   methods:{
     // 拖拽时，修改progress状态，触发监听后修改背景颜色
@@ -68,6 +65,7 @@ export default {
     // 上一章节
     prevSection(){
       if(this.isBookLoaded && this.section > 0){
+        // 修改section
         this.setBookSection(this.section - 1).then(() => {
           this.jumpToSection()
         })
@@ -76,6 +74,7 @@ export default {
     // 下一章节
     nextSection(){
       if(this.isBookLoaded && this.section < this.currentBook.spine.length - 1){
+        // 修改section
         this.setBookSection(this.section + 1).then(() => {
           this.jumpToSection()
         })
@@ -86,20 +85,15 @@ export default {
         // 获取对应的章节对象
         const sectionInfo = this.currentBook.section(this.section)
         if(sectionInfo && sectionInfo.href){
+          // 跳转到对应章节
           this.currentBook.rendition.display(sectionInfo.href).then(() => {
             this.setLoading(false)
-            // 修改进度条
-            const currentLocation = this.currentBook.rendition.currentLocation()
-            const currentPorgress = Math.floor(currentLocation.start.percentage * 100)
-            this.setBookProgress(currentPorgress)
-            // 写入本地存储
-            saveProgress(this.fileName,currentPorgress)
-            // 修改章节标题
-            const currentSectionName = this.currentBook.navigation.get(sectionInfo.href).label
-            this.setSectionName(currentSectionName)
+            // 基于当前所在位置同步progress，并更新本地存储
+            this.syncProgress()
+            // 修改章节标题：section改变触发监听，自动修改标题，不需要手动修改            
           })
         }
-    }
+    },
   },
   watch:{
     // 监听progress改变，同步进度条样式

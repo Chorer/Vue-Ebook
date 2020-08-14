@@ -10,6 +10,7 @@ export default {
     currentBook: null,
     isBookLoaded: false,     // 记录书本是否加载完毕的状态
     progress: 0,             // 书本阅读进度
+    readTime: 0,          // 累计阅读时长（分钟）
     section: 0,              // 书本章节
     currentSectionName: '',
     locations: null,            // 用于操作书籍页面跳转的对象
@@ -57,6 +58,9 @@ export default {
     },
     _setLoading(state,isLoadingShow){
       state.isLoadingShow = isLoadingShow
+    },
+    _setReadTime(state,readTime){
+      state.readTime = readTime
     }
   },
   actions:{

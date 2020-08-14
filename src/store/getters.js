@@ -12,5 +12,6 @@ export default {
   section: state => state.book.section,  
   currentSectionName: state => state.book.currentSectionName,
   locations: state => state.book.locations,
-  isLoadingShow: state => state.book.isLoadingShow
+  isLoadingShow: state => state.book.isLoadingShow,
+  readTime: state => state.book.readTime
 }

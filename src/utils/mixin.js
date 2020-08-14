@@ -19,7 +19,8 @@ export const bookMixin = {
         'section',
         'currentSectionName',
         'locations',
-        'isLoadingShow'
+        'isLoadingShow',
+        'readTime'
       ]),
     _themeList(){
       return themeList(this)
@@ -41,7 +42,8 @@ export const bookMixin = {
         'setBookSection',
         'setSectionName',        
         'setLocations',
-        'setLoading'
+        'setLoading',
+        'setReadTime'
       ]),
     injectCssByTheme(name){
       removeAllCss()
@@ -78,11 +80,13 @@ export const bookMixin = {
         this.setLoading(false)
       })      
     },
+    // 同步章节
     syncSection(){
       const currentLocation = this.currentBook.rendition.currentLocation()
       this.setBookSection(currentLocation.start.index)
       console.log(currentLocation.start.index)
     },
+    // 同步章节标题
     syncSectionName(section){
       if(this.currentBook && this.currentBook.navigation){
         const sectionInfo = this.currentBook.section(section)     
@@ -91,6 +95,13 @@ export const bookMixin = {
           this.setSectionName(currentSectionName)
         }
       }         
+    },
+    // 根据当前位置同步 progress
+    syncProgress(){
+      const currentLocation = this.currentBook.rendition.currentLocation()
+      const currentPorgress = Math.floor(currentLocation.start.percentage * 100)
+      this.setBookProgress(currentPorgress)
+      saveProgress(this.fileName,currentPorgress)      
     }
   }
 }

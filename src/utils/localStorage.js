@@ -68,3 +68,11 @@ export function saveProgress(fileName,progress){
 export function getProgress(fileName){
   return getBookObject(fileName,'progress')
 }
+
+// 阅读时长统计
+export function saveTime(fileName,time){
+  return setBookObject(fileName,'time',time)
+}
+export function getTime(fileName){
+  return getBookObject(fileName,'time')
+}
