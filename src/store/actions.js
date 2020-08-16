@@ -43,5 +43,8 @@ export default {
   },
   setReadTime({ commit,state },readTime){
     return commit('_setReadTime',readTime)
+  },
+  setSlideBookInfo({ commit,state },slideBookInfo){
+    return commit('_setSlideBookInfo',slideBookInfo)
   }
 }

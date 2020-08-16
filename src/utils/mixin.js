@@ -20,10 +20,14 @@ export const bookMixin = {
         'currentSectionName',
         'locations',
         'isLoadingShow',
-        'readTime'
+        'readTime',
+        'slideBookInfo'
       ]),
     _themeList(){
       return themeList(this)
+    },
+    getReadTime(){
+      return this.$t('book.haveRead').replace('$1',`${this.readTime}`)
     }  
   },
   methods:{
@@ -43,7 +47,8 @@ export const bookMixin = {
         'setSectionName',        
         'setLocations',
         'setLoading',
-        'setReadTime'
+        'setReadTime',
+        'setSlideBookInfo'
       ]),
     injectCssByTheme(name){
       removeAllCss()

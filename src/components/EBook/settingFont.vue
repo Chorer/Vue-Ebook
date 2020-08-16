@@ -1,38 +1,40 @@
 <template>
-  <div class="setting-font">
-    <div class="setting-font-size">
-      <div class="preview" :style="{fontSize: miniFont + 'px'}">
-        <span>A</span>
-      </div>
-      <div class="select">
-        <div class="select-wrapper" 
-          v-for="item in fontList" 
-          :key="item.fontSize"
-          @click="changeFont(item.fontSize)"
-          >
-          <div class="line"></div>
-          <div class="dot">
-            <div class="big-dot" v-show="currentFont == item.fontSize">
-              <div class="small-dot"></div>
+  <transition name="slide-up">
+    <div class="setting-font" v-show="isBarShow && isSettingShow === 3">
+      <div class="setting-font-size">
+        <div class="preview" :style="{fontSize: miniFont + 'px'}">
+          <span>A</span>
+        </div>
+        <div class="select">
+          <div class="select-wrapper" 
+            v-for="item in fontList" 
+            :key="item.fontSize"
+            @click="changeFont(item.fontSize)"
+            >
+            <div class="line"></div>
+            <div class="dot">
+              <div class="big-dot" v-show="currentFont == item.fontSize">
+                <div class="small-dot"></div>
+              </div>
             </div>
+            <div class="line"></div>
           </div>
-          <div class="line"></div>
+        </div>
+        <div class="preview" :style="{fontSize: maxFont + 'px'}">
+          <span>A</span>
         </div>
       </div>
-      <div class="preview" :style="{fontSize: maxFont + 'px'}">
-        <span>A</span>
+      <div class="setting-font-family" @click="changeFamilyPopup">
+        <div class="family-text">
+          <span>{{currentFamily}}</span>
+        </div>
+        <div class="famliy-icon">
+          <span class="icon-forward iconfont"></span>
+        </div>
       </div>
-    </div>
-    <div class="setting-font-family" @click="changeFamilyPopup">
-      <div class="family-text">
-        <span>{{currentFamily}}</span>
-      </div>
-      <div class="famliy-icon">
-        <span class="icon-forward iconfont"></span>
-      </div>
-    </div>
-    <setting-family v-show="isFamilyPopShow"></setting-family>
-  </div>  
+      <setting-family v-show="isFamilyPopShow"></setting-family>
+    </div>  
+  </transition>
 </template>
 
 <script>
@@ -163,4 +165,13 @@ export default {
     }
 
   }
+  .slide-up-enter,.slide-up-leave-to {
+    transform: translate(0,rem(150));
+  }
+  .slide-up-enter-to,.slide-up-leave {
+    transform: translate(0,0);
+  }
+  .slide-up-enter-active,.slide-up-leave-active {
+    transition: all .2s linear;
+  }   
 </style>

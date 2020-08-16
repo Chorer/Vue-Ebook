@@ -1,17 +1,15 @@
 <template>
-  <transition name="slide-up">
-    <div v-show="isBarShow && isSettingShow >= 0">
-      <setting-list v-show="isSettingShow === 0"></setting-list>
-      <setting-progress v-show="isSettingShow === 1"></setting-progress>
-      <setting-theme v-show="isSettingShow === 2"></setting-theme>
-      <setting-font v-show="isSettingShow === 3"></setting-font>
+    <div class="setting-block">
+      <setting-slide></setting-slide>
+      <setting-progress></setting-progress>
+      <setting-theme></setting-theme>
+      <setting-font></setting-font>
     </div>
-  </transition>  
 </template>
 
 <script>
 import settingFont from 'components/EBook/settingFont'
-import settingList from 'components/EBook/settingList'
+import settingSlide from 'components/EBook/settingSlide'
 import settingTheme from 'components/EBook/settingTheme'
 import settingProgress from 'components/EBook/settingProgress'
 
@@ -21,7 +19,7 @@ export default {
   mixins:[bookMixin],
   components:{
     settingFont,
-    settingList,
+    settingSlide,
     settingTheme,
     settingProgress
   }
@@ -29,13 +27,5 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  .slide-up-enter,.slide-up-leave-to {
-    transform: translate(0,rem(150));
-  }
-  .slide-up-enter-to,.slide-up-leave {
-    transform: translate(0,0);
-  }
-  .slide-up-enter-active,.slide-up-leave-active {
-    transition: all .2s linear;
-  }
+
 </style>

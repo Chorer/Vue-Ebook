@@ -79,6 +79,7 @@ export default {
         this.initFontSize()
         this.initFontFamily()
         this.initTimer()
+        this.initSlideBookInfo()
       })
     },
     generateLocation(){
@@ -98,13 +99,16 @@ export default {
       if(!readTime){
         readTime = 0
       }
+      // 首次视图展示
+      const currentMin = secToMin(readTime)
+      this.setReadTime(currentMin)
       // 开启计时器
       this.timer = setInterval(() => {
         readTime ++
         if(readTime % 30 == 0) {
           // 写入本地存储
           saveTime(this.fileName,readTime)
-          // 设置全局状态
+          // 更新时视图展示
           const currentMin = secToMin(readTime)
           this.setReadTime(currentMin)
         }
@@ -160,6 +164,19 @@ export default {
         this.jumpToPage(currentProgress)
       }
     }, 
+    initSlideBookInfo(){
+      let slideBookInfo = null
+      // 获取书籍信息
+      this.currentBook.loaded.metadata.then(metadata => {
+        slideBookInfo = metadata
+      })
+      this.currentBook.loaded.cover.then(cover => {
+        return this.currentBook.archive.createUrl(cover)
+      }).then(coverUrl => {
+        slideBookInfo.coverUrl = coverUrl
+        this.setSlideBookInfo(slideBookInfo)
+      })
+    },
     bindTouch(){
       // 绑定滑动翻页事件
       let startX,startTime

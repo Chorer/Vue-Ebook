@@ -1,5 +1,5 @@
 <template>
-  <div>目录</div>
+  <div>书签</div>
 </template>
 
 <script>

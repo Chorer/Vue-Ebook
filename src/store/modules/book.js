@@ -14,54 +14,11 @@ export default {
     section: 0,              // 书本章节
     currentSectionName: '',
     locations: null,            // 用于操作书籍页面跳转的对象
-    isLoadingShow: false
+    isLoadingShow: false,
+    slideBookInfo: null
   },
   mutations:{
-    _setFileName(state,fileName){
-      state.fileName = fileName
-    },
-    _setBarShow(state,isShow){
-      state.isBarShow = isShow
-    },
-    _setSetting(state,num){
-      state.isSettingShow = num
-    },
-    _setCurrentFont(state,currentFont){
-      state.currentFont = currentFont
-    },
-    _setCurrentBook(state,currentBook){
-      state.currentBook = currentBook
-    },
-    _setCurrentFamily(state,currentFamily){
-      state.currentFamily = currentFamily
-    },
-    _setFamilyPop(state,isFamilyPopShow){
-      state.isFamilyPopShow = isFamilyPopShow
-    },
-    _setCurrentTheme(state,currentTheme){
-      state.currentTheme = currentTheme
-    },
-    _setBookLoaded(state,isBookLoaded){
-      state.isBookLoaded = isBookLoaded
-    },
-    _setBookProgress(state,progress){
-      state.progress = progress
-    },
-    _setBookSection(state,section){
-      state.section = section
-    },    
-    _setSectionName(state,currentSectionName){
-      state.currentSectionName = currentSectionName
-    },      
-    _setLocations(state,locations){
-      state.locations = locations
-    },
-    _setLoading(state,isLoadingShow){
-      state.isLoadingShow = isLoadingShow
-    },
-    _setReadTime(state,readTime){
-      state.readTime = readTime
-    }
+  
   },
   actions:{
 

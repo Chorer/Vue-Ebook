@@ -1,34 +1,36 @@
 <template>
-  <div class="setting-progress">
-    <div class="icon-wrapper" @click="prevSection">
-      <span class="icon-back iconfont"></span>
-    </div>
-    <div class="progress-wrapper">
-      <div class="progress-readtime">
-        <span class="cal-time">{{getReadTime}}</span>
+  <transition name="slide-up">
+    <div class="setting-progress" v-show="isBarShow && isSettingShow === 1">
+      <div class="icon-wrapper" @click="prevSection">
+        <span class="icon-back iconfont"></span>
+      </div>
+      <div class="progress-wrapper">
+        <div class="progress-readtime">
+          <span class="cal-time">{{getReadTime}}</span>
+          <span class="icon-forward iconfont"></span>
+        </div>
+        <div class="progress-slider">
+          <input type="range"
+            min="0"
+            max="100"
+            step="1"
+            ref="slider"
+            :disabled="!isBookLoaded"
+            :value="progress"
+            @input="onDragSlider"
+            @change="onUpSlider"
+          >
+        </div>
+        <div class="progress-ratio">
+          <span class="section-name">{{currentSectionName}}</span>
+          <span class="section-percentage">({{isBookLoaded ? progress + '%' : '加载中…'}})</span>
+        </div>
+      </div>
+      <div class="icon-wrapper" @click="nextSection">
         <span class="icon-forward iconfont"></span>
       </div>
-      <div class="progress-slider">
-        <input type="range"
-          min="0"
-          max="100"
-          step="1"
-          ref="slider"
-          :disabled="!isBookLoaded"
-          :value="progress"
-          @input="onDragSlider"
-          @change="onUpSlider"
-        >
-      </div>
-      <div class="progress-ratio">
-        <span class="section-name">{{currentSectionName}}</span>
-        <span class="section-percentage">({{isBookLoaded ? progress + '%' : '加载中…'}})</span>
-      </div>
     </div>
-    <div class="icon-wrapper" @click="nextSection">
-      <span class="icon-forward iconfont"></span>
-    </div>
-  </div>
+  </transition>  
 </template>
 
 <script>
@@ -43,18 +45,13 @@ import loadingModal from 'components/EBook/loadingModal'
 
 export default {
   mixins:[bookMixin],
-  computed:{
-    getReadTime(){
-      return this.$t('book.haveRead').replace('$1',` ${this.readTime} `)
-    },
-  },
   methods:{
     // 拖拽时，修改progress状态，触发监听后修改背景颜色
     onDragSlider(event){
       // 这里也可以一边拖拽一边实时渲染，但比较损耗性能，所以结束拖拽后再渲染
       const currentValue = event.target.value
       this.setBookProgress(currentValue)
-      this.$refs.slider.style.backgroundSize = `${event.target.value}% 100%`
+      this.$refs.slider.style.backgroundSize = `${currentValue}% 100%`
     },
     // 结束拖拽时，跳到对应页面
     onUpSlider(event){
@@ -98,7 +95,9 @@ export default {
   watch:{
     // 监听progress改变，同步进度条样式
     progress(newVal,oldVal) {
-      this.$refs.slider.style.backgroundSize = `${newVal}% 100%`
+      if(newVal){
+        this.$refs.slider.style.backgroundSize = `${newVal}% 100%`
+      }
     },
     // 监听section改变，同步章节标题
     section(newVal,oldVal) {
@@ -183,5 +182,14 @@ export default {
         }
       }
     }
+  } 
+  .slide-up-enter,.slide-up-leave-to {
+    transform: translate(0,rem(150));
   }
+  .slide-up-enter-to,.slide-up-leave {
+    transform: translate(0,0);
+  }
+  .slide-up-enter-active,.slide-up-leave-active {
+    transition: all .2s linear;
+  }     
 </style>

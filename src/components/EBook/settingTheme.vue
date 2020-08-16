@@ -1,17 +1,19 @@
 <template>
-  <div class="setting-theme">
-    <div class="setting-theme-item" v-for="(item,index) in _themeList" :key="item.name" @click="changeTheme(index)">
-      <div class="theme-review"
-        :style="{ background: item.style.body.background }"
-        :class="{'select': item.name == currentTheme}"
-      ></div>
-      <div class="theme-name"
-        :class="{'select': item.name == currentTheme}"
-      >
-        {{item.alias}}
+  <transition name="slide-up">
+    <div class="setting-theme" v-show="isBarShow && isSettingShow === 2">
+      <div class="setting-theme-item" v-for="(item,index) in _themeList" :key="item.name" @click="changeTheme(index)">
+        <div class="theme-review"
+          :style="{ background: item.style.body.background }"
+          :class="{'select': item.name == currentTheme}"
+        ></div>
+        <div class="theme-name"
+          :class="{'select': item.name == currentTheme}"
+        >
+          {{item.alias}}
+        </div>
       </div>
     </div>
-  </div>
+  </transition>
 </template>
 
 <script>
@@ -78,4 +80,13 @@ export default {
       }
     }
   }
+  .slide-up-enter,.slide-up-leave-to {
+    transform: translate(0,rem(150));
+  }
+  .slide-up-enter-to,.slide-up-leave {
+    transform: translate(0,0);
+  }
+  .slide-up-enter-active,.slide-up-leave-active {
+    transition: all .2s linear;
+  }   
 </style>
