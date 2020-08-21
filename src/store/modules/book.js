@@ -15,7 +15,8 @@ export default {
     currentSectionName: '',
     locations: null,            // 用于操作书籍页面跳转的对象
     isLoadingShow: false,
-    slideBookInfo: null
+    slideBookInfo: null,
+    toc: []
   },
   mutations:{
   

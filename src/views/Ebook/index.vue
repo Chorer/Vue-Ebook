@@ -27,7 +27,8 @@ import {
   saveTime,
   getTime
 } from 'utils/localStorage'
-import { secToMin } from 'utils/time'
+import { secToMin } from 'utils/common'
+import { flatten } from 'utils/book'
 import baseUrl from '@/config'
 
 import Epub from 'epubjs'
@@ -170,11 +171,31 @@ export default {
       this.currentBook.loaded.metadata.then(metadata => {
         slideBookInfo = metadata
       })
+      // 获取封面信息
       this.currentBook.loaded.cover.then(cover => {
         return this.currentBook.archive.createUrl(cover)
       }).then(coverUrl => {
         slideBookInfo.coverUrl = coverUrl
         this.setSlideBookInfo(slideBookInfo)
+      })
+      // 获取目录信息
+      this.currentBook.loaded.navigation.then(nav => {
+        // 1. 数组扁平化
+        const flatNav = flatten(nav.toc)
+        function findLevel(item) {
+          // 如果是顶层
+          if(!item.parent){
+            return 0
+          } else {
+            return findLevel(flatNav.filter(parentItem => parentItem.id === item.parent)[0]) + 1
+          }
+        }
+        // 2. 为对象注入层级属性
+        flatNav.forEach(item => {
+          item.level = findLevel(item)
+        })
+        // 3. 写入全局状态
+        this.setToc(flatNav)
       })
     },
     bindTouch(){

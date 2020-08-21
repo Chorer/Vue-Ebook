@@ -46,5 +46,8 @@ export default {
   },
   _setSlideBookInfo(state,slideBookInfo){
     state.book.slideBookInfo = slideBookInfo
+  },
+  _setToc(state,toc){
+    state.book.toc = toc
   }
 }

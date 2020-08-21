@@ -21,7 +21,8 @@ export const bookMixin = {
         'locations',
         'isLoadingShow',
         'readTime',
-        'slideBookInfo'
+        'slideBookInfo',
+        'toc'
       ]),
     _themeList(){
       return themeList(this)
@@ -48,7 +49,8 @@ export const bookMixin = {
         'setLocations',
         'setLoading',
         'setReadTime',
-        'setSlideBookInfo'
+        'setSlideBookInfo',
+        'setToc'
       ]),
     injectCssByTheme(name){
       removeAllCss()
@@ -71,6 +73,7 @@ export const bookMixin = {
           injectCss(`${baseUrl}/themes/theme_default.css`)
       }
     },
+    // 页面跳转
     jumpToPage(currentProgress) {
       saveProgress(this.fileName,currentProgress)
       const ratio = currentProgress / 100
@@ -85,6 +88,17 @@ export const bookMixin = {
         this.setLoading(false)
       })      
     },
+    // 章节跳转
+    jumpToSection(href){
+      this.setLoading(true)
+      // 跳转到对应章节
+      this.currentBook.rendition.display(href).then(() => {
+        this.setLoading(false)
+        // 基于当前所在位置同步progress，并更新本地存储
+        this.syncProgress()
+        // 修改章节标题：section改变触发监听，自动修改标题，不需要手动修改            
+      })
+    },    
     // 同步章节
     syncSection(){
       const currentLocation = this.currentBook.rendition.currentLocation()
@@ -93,6 +107,7 @@ export const bookMixin = {
     },
     // 同步章节标题
     syncSectionName(section){
+      // 批注：需要改进
       if(this.currentBook && this.currentBook.navigation){
         const sectionInfo = this.currentBook.section(section)     
         if(sectionInfo && sectionInfo.href) {
@@ -104,9 +119,9 @@ export const bookMixin = {
     // 根据当前位置同步 progress
     syncProgress(){
       const currentLocation = this.currentBook.rendition.currentLocation()
-      const currentPorgress = Math.floor(currentLocation.start.percentage * 100)
-      this.setBookProgress(currentPorgress)
-      saveProgress(this.fileName,currentPorgress)      
+      const currentProgress = Math.floor(currentLocation.start.percentage * 100)
+      this.setBookProgress(currentProgress)
+      saveProgress(this.fileName,currentProgress)      
     }
   }
 }

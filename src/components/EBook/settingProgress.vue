@@ -23,7 +23,7 @@
         </div>
         <div class="progress-ratio">
           <span class="section-name">{{currentSectionName}}</span>
-          <span class="section-percentage">({{isBookLoaded ? progress + '%' : '加载中…'}})</span>
+          <span class="section-percentage">{{isBookLoaded ? '(' + progress + '%)' : '加载中…'}}</span>
         </div>
       </div>
       <div class="icon-wrapper" @click="nextSection">
@@ -64,7 +64,11 @@ export default {
       if(this.isBookLoaded && this.section > 0){
         // 修改section
         this.setBookSection(this.section - 1).then(() => {
-          this.jumpToSection()
+          // 获取对应的章节对象
+          const sectionInfo = this.currentBook.section(this.section)
+          if(sectionInfo && sectionInfo.href){
+            this.jumpToSection(sectionInfo.href)
+          }
         })
       }
     },
@@ -73,23 +77,13 @@ export default {
       if(this.isBookLoaded && this.section < this.currentBook.spine.length - 1){
         // 修改section
         this.setBookSection(this.section + 1).then(() => {
-          this.jumpToSection()
+          // 获取对应的章节对象
+          const sectionInfo = this.currentBook.section(this.section)
+          if(sectionInfo && sectionInfo.href){
+            this.jumpToSection(sectionInfo.href)
+          }
         })
       }
-    },
-    jumpToSection(){
-        this.setLoading(true)
-        // 获取对应的章节对象
-        const sectionInfo = this.currentBook.section(this.section)
-        if(sectionInfo && sectionInfo.href){
-          // 跳转到对应章节
-          this.currentBook.rendition.display(sectionInfo.href).then(() => {
-            this.setLoading(false)
-            // 基于当前所在位置同步progress，并更新本地存储
-            this.syncProgress()
-            // 修改章节标题：section改变触发监听，自动修改标题，不需要手动修改            
-          })
-        }
     },
   },
   watch:{

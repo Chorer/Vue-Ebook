@@ -80,3 +80,7 @@ export function removeAllCss(){
     document.querySelector('head').removeChild(link)
   })
 }
+
+export function flatten(arr){
+  return [].concat(...arr.map(item => [].concat(item,...flatten(item.subitems))))
+}

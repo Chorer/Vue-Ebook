@@ -14,5 +14,6 @@ export default {
   locations: state => state.book.locations,
   isLoadingShow: state => state.book.isLoadingShow,
   readTime: state => state.book.readTime,
-  slideBookInfo: state => state.book.slideBookInfo
+  slideBookInfo: state => state.book.slideBookInfo,
+  toc: state => state.book.toc
 }

@@ -35,22 +35,66 @@
           </div>
         </div>
       </div>
-      <div class="list-panel-toc"></div>
+      <div class="list-panel-toc">
+        <common-scroll :customDown="slideDown" :customUp="slideUp">
+          <div class="list-panel-toc-item" 
+            v-for="(item,index) in toc" 
+            :key="index"
+            @click="_jumpToSection(item.href,index)"
+          >
+            <span 
+              class="chapter-name"
+              :style="textIndent(item.level)"  
+              :class="{'selected': section === index}"
+            >{{item.label}}</span>
+            <span class="chapter-page">{{index}}</span>
+          </div>
+        </common-scroll>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import commonScroll from 'components/common/commonScroll'
+
 import { bookMixin } from 'utils/mixin'
+import { px2rem } from 'utils/common'
 
 export default {
   mixins: [bookMixin],
+  components:{
+    commonScroll
+  },
   data(){
     return {
-      isSearchShow: false
+      isSearchShow: false,
+      slideDown:{
+        use: false
+      },
+      slideUp:{
+        use: false,
+        scrollbar:{
+          use : true           
+        }
+      }
     }
   },
   methods:{
+    textIndent(level){
+      return {
+        textIndent: px2rem(`${level * 10}`) 
+      }
+    },
+    _jumpToSection(href,index){
+      // 修改全局 section
+      this.setBookSection(index).then(() => {
+        return this.jumpToSection(href)
+      }).then(() => {
+        this.setSetting(-1)
+        this.setBarShow(false)
+      })
+    },
     showSearchPage(){
       this.isSearchShow = true
     },
@@ -144,12 +188,7 @@ export default {
             font-size: rem(14);
             // 375*0.85-28-45-16-60
             width: 100%;
-            display: -webkit-box;
-            -webkit-box-orient: vertical;
-            -webkit-line-clamp: 3;
-            white-space: normal;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            @include ellipse(3);
             word-break: keep-all;
             line-height: rem(16);
           }
@@ -179,7 +218,32 @@ export default {
         }
       }
       .list-panel-toc {
+        height: calc(100% - #{rem(76)});
+        .mescroll {
+          position: fixed;
+          width: 85%;
+          height: auto;
+          top: rem(148);
+          bottom: rem(48);
+          box-sizing: border-box;
+          padding: 0 rem(15);
+          .list-panel-toc-item {
+            display: flex;
+            box-sizing: border-box;
+            padding: rem(20) 0;
+            font-size: rem(14);
+            .chapter-name {
+              flex: 1;
+              @include ellipse(1);
+              &.selected {
+                color: #346cb9;
+              }
+            }
+            .chapter-page {
 
+            }
+          }
+        }
       }
     }
   }  

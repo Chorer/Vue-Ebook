@@ -46,5 +46,8 @@ export default {
   },
   setSlideBookInfo({ commit,state },slideBookInfo){
     return commit('_setSlideBookInfo',slideBookInfo)
+  },
+  setToc({ commit,state },toc){
+    return commit('_setToc',toc)
   }
 }
